@@ -77,3 +77,5 @@ mark { background: #EFE0FF; color: var(--ink); border-radius: 4px; padding: 0 2p
 a { color: var(--deep); }
 [hidden] { display: none !important; }
 h1:focus { outline: none; }
+.need { background: #EEF7F1; border: 1px solid #BFE0CB; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.need p { color: #1F3A2B !important; }

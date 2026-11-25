@@ -85,54 +85,72 @@
 
   // ---------- Draft check ----------
   var RULES = [
-    { why: "Apologizing before you've asked.", re: /\b(i'?m (so |really |very )?sorry|sorry|i apologi[sz]e|i hate to ask|forgive me)\b/gi },
-    { why: 'Shrinks your need before they hear it.', re: /\b(i know (this|it)('?s| is) (a lot( to ask)?|asking a lot|a big ask)|i know you'?re (busy|tired)|if it'?s not too much (trouble|to ask)|small favou?r|a little|a bit|just|only)\b/gi },
-    { why: 'A hedge. It makes it easy to say no.', re: /\b(maybe|possibly|perhaps|kind of|kinda|sort of|i guess|i think|i feel like|probably|hopefully)\b/gi },
-    { why: 'Asking permission for something you can state.', re: /\b(would it (maybe |possibly )?be (ok|okay|alright|all right)|is it (ok|okay|alright) if|would you mind|do you think (you|it)|could i possibly)\b/gi },
-    { why: 'Says no for them.', re: /\b(totally fine if not|no worries if not|(it'?s )?(ok|okay|fine) if not|no pressure|feel free to say no|don'?t worry about it|only if you want)\b/gi }
+    { kind: 'shrink', why: "Apologizing before you've asked.", re: /\b(i'?m (so |really |very )?sorry|sorry|i apologi[sz]e|i hate to ask|forgive me)\b/gi },
+    { kind: 'shrink', why: 'Shrinks your need before they hear it.', re: /\b(i know (this|it)('?s| is) (a lot( to ask)?|asking a lot|a big ask)|i know you'?re (busy|tired)|if it'?s not too much (trouble|to ask)|small favou?r|a little|a bit|just|only)\b/gi },
+    { kind: 'shrink', why: 'A hedge. It makes it easy to say no.', re: /\b(maybe|possibly|perhaps|kind of|kinda|sort of|i guess|i think|i feel like|probably|hopefully)\b/gi },
+    { kind: 'shrink', why: 'Asking permission for something you can state.', re: /\b(would it (maybe |possibly )?be (ok|okay|alright|all right)|is it (ok|okay|alright) if|would you mind|do you think (you|it)|could i possibly)\b/gi },
+    { kind: 'shrink', why: 'Says no for them.', re: /\b(totally fine if not|no worries if not|(it'?s )?(ok|okay|fine) if not|no pressure|feel free to say no|don'?t worry about it|only if you want)\b/gi },
+    { kind: 'heat', why: 'Strong language. It can make them defend themselves instead of hearing you.', re: /\b(damn( it)?|dammit|god ?damn\w*|hell|shit\w*|bullshit|fuck\w*|f\*+\w*|crap|wtf|pissed( off)?)\b/gi },
+    { kind: 'heat', why: 'An order. People tend to push back on orders. Try saying what you need instead.', re: /(^|[.!?]\s*)(get off|get out|stop it|stop that|stop|quit it|quit|shut up|knock it off|cut it out|grow up|leave me alone|put (that|the|your) \w+ down|listen to me)\b/gi },
+    { kind: 'heat', why: 'Blame or an absolute. The talk turns to whether that is true, not to your need.', re: /\b(you always|you never|every single time|you don'?t even|you don'?t care|you'?re (so|such a|being|always|never)|what is wrong with you|why do you always)\b/gi },
+    { kind: 'heat', why: 'Shouting in text.', re: /\b[A-Z]{4,}\b|!{2,}/g }
   ];
+  var NEED = /\b(i'?m trying to [^.!?]+|i want [^.!?]+|i need [^.!?]+|i'?d like [^.!?]+|i miss [^.!?]+|it matters to me[^.!?]*)/i;
 
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
   }
 
-  function analyze(text) {
+  function analyze(rawText) {
+    // Phones type curly apostrophes. Swap them for straight ones so the rules match. Same length, so positions stay valid.
+    var text = rawText.replace(/[\u2018\u2019\u02BC]/g, "'");
     var hits = [];
     RULES.forEach(function (r) {
       r.re.lastIndex = 0;
       var m;
       while ((m = r.re.exec(text)) !== null) {
-        hits.push({ start: m.index, end: m.index + m[0].length, phrase: m[0], why: r.why });
+        var lead = (m[1] && r.kind === 'heat' && /^[.!?\s]*$/.test(m[1])) ? m[1].length : 0;
+        hits.push({ start: m.index + lead, end: m.index + m[0].length, phrase: m[0].slice(lead), why: r.why, kind: r.kind });
+        if (m[0].length === 0) r.re.lastIndex++;
       }
     });
     hits.sort(function (a, b) { return a.start - b.start || b.end - a.end; });
     var clean = [], lastEnd = -1;
     hits.forEach(function (h) { if (h.start >= lastEnd) { clean.push(h); lastEnd = h.end; } });
     var words = text.trim().split(/\s+/).filter(Boolean).length;
-    return { hits: clean, long: words > 60, words: words };
+    var need = text.match(NEED);
+    return { hits: clean, long: words > 60, words: words, need: need ? need[0].trim() : '' };
   }
 
   function renderFlags(text, box) {
     var res = analyze(text);
-    var html = '';
     var marked = '', i = 0;
     res.hits.forEach(function (h) {
       marked += escapeHtml(text.slice(i, h.start)) + '<mark>' + escapeHtml(text.slice(h.start, h.end)) + '</mark>';
       i = h.end;
     });
     marked += escapeHtml(text.slice(i));
-    var n = res.hits.length + (res.long ? 1 : 0);
-    if (n === 0) {
-      html = '<strong>Nothing flagged</strong><p>No apologies, hedges, or built-in outs found. Read it out loud once. Does it say what you need?</p>';
-    } else {
-      html = '<strong>' + n + (n === 1 ? ' place' : ' places') + ' you shrink your ask</strong>';
-      html += '<p class="quote">' + marked + '</p><ul class="flag-list">';
-      res.hits.forEach(function (h) {
-        html += '<li><span class="phrase">"' + escapeHtml(h.phrase) + '"</span><span class="why">' + h.why + '</span></li>';
-      });
-      if (res.long) html += '<li><span class="phrase">' + res.words + ' words</span><span class="why">Long asks can turn into over-explaining. Try one or two sentences.</span></li>';
-      html += '</ul><p class="muted small">You decide what to keep. Some of these may be fine in your situation.</p>';
+    var shrink = res.hits.filter(function (h) { return h.kind === 'shrink'; });
+    var heat = res.hits.filter(function (h) { return h.kind === 'heat'; });
+    var html = '';
+    function list(items) {
+      var out = '<ul class="flag-list">';
+      items.forEach(function (h) { out += '<li><span class="phrase">"' + escapeHtml(h.phrase) + '"</span><span class="why">' + h.why + '</span></li>'; });
+      return out + '</ul>';
     }
+    if (!shrink.length && !heat.length && !res.long) {
+      html = '<strong>Nothing flagged</strong><p>No apologies, hedges, orders, or blame found. Read it out loud once. Does it say what you need?</p>';
+    } else {
+      html = '<p class="quote">' + marked + '</p>';
+      if (heat.length) {
+        html += '<strong>' + heat.length + (heat.length === 1 ? ' place' : ' places') + ' this may land as an attack</strong>' + list(heat);
+        html += '<p class="muted small">The frustration makes sense. The question is whether this wording gets you what you need.</p>';
+      }
+      if (shrink.length) html += '<strong>' + shrink.length + (shrink.length === 1 ? ' place' : ' places') + ' you shrink your ask</strong>' + list(shrink);
+      if (res.long) html += '<ul class="flag-list"><li><span class="phrase">' + res.words + ' words</span><span class="why">Long asks can turn into over-explaining. Try one or two sentences.</span></li></ul>';
+    }
+    if (res.need) html += '<div class="need"><strong>Your need is in here</strong><p>"' + escapeHtml(res.need) + '"</p><p class="muted small">That part says what you want. Consider leading with it.</p></div>';
+    if (shrink.length || heat.length || res.long) html += '<p class="muted small">You decide what to keep. Some of these may be fine in your situation.</p>';
     box.innerHTML = html;
     box.hidden = false;
   }
