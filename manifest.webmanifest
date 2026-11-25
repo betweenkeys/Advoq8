@@ -1,0 +1,13 @@
+{
+  "name": "Advoq8",
+  "short_name": "Advoq8",
+  "description": "Practice saying what you need. Without folding, and without blowing up.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FBF9FE",
+  "theme_color": "#FBF9FE",
+  "icons": [
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

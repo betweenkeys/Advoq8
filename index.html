@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Advoq8</title>
+<meta name="description" content="Practice saying what you need. Without folding, and without blowing up.">
+<meta name="theme-color" content="#FBF9FE">
+<link rel="icon" type="image/png" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar" id="topbar" hidden>
+    <button class="icon-btn" id="back" type="button" aria-label="Back">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="brand"><img src="assets/advoq8-8-yani.png" alt="" width="22" height="30"><span>Advoq8</span></div>
+    <span class="step" id="step"></span>
+  </header>
+
+  <div class="support-banner" id="supportBanner" role="note" hidden>
+    <span>Support is here if you need it.</span>
+    <button type="button" class="link-btn" data-go="safety">See options</button>
+  </div>
+
+  <main id="main">
+
+    <!-- Welcome 1 -->
+    <section class="screen" data-screen="welcome1" aria-labelledby="w1t">
+      <div class="welcome-logo"><img src="assets/advoq8-logo-yani.png" alt="Advoq8 logo, drawn by Yani" width="200" height="283"></div>
+      <div class="center">
+        <h1 id="w1t">Advoq8</h1>
+        <p class="lead">Practice saying what you need. Without folding, and without blowing up.</p>
+      </div>
+      <div class="grow"></div>
+      <div class="dots" aria-hidden="true"><span class="on"></span><span></span></div>
+      <button class="btn" type="button" data-go="welcome2">Next</button>
+    </section>
+
+    <!-- Welcome 2 -->
+    <section class="screen" data-screen="welcome2" aria-labelledby="w2t">
+      <h1 id="w2t">How it works</h1>
+      <ol class="how">
+        <li><span class="num">1</span><div><strong>Unpack</strong><p>Say what is going on, what you want, and what you are afraid of.</p></div></li>
+        <li><span class="num">2</span><div><strong>Draft your ask</strong><p>Write it in your own words. Advoq8 points out where you shrink it.</p></div></li>
+        <li><span class="num">3</span><div><strong>Get ready for pushback</strong><p>Pick what they might say back, and plan your reply.</p></div></li>
+      </ol>
+      <div class="card soft"><p>Advoq8 helps you decide. It will not decide for you, and it will not write your words for you.</p></div>
+      <div class="card soft"><p>Nothing you type leaves this device, and nothing is saved after you close the page.</p></div>
+      <div class="grow"></div>
+      <div class="dots" aria-hidden="true"><span></span><span class="on"></span></div>
+      <button class="btn" type="button" data-go="unpack">Start</button>
+    </section>
+
+    <!-- Unpack -->
+    <section class="screen" data-screen="unpack" aria-labelledby="ut">
+      <h1 id="ut">What&#39;s going on?</h1>
+      <div class="field">
+        <label for="situation">What happened</label>
+        <textarea id="situation" rows="5" placeholder="Describe the situation in your own words."></textarea>
+      </div>
+      <div class="field">
+        <label for="want">What do you want?</label>
+        <textarea id="want" rows="2" placeholder="Say it plainly, even if it feels like too much."></textarea>
+      </div>
+      <div class="field">
+        <label for="fear">What are you afraid will happen if you ask?</label>
+        <textarea id="fear" rows="2"></textarea>
+      </div>
+      <p class="error" id="unpackError" role="alert" hidden>Fill in all three so Advoq8 can reflect it back to you.</p>
+      <div class="grow"></div>
+      <button class="btn" type="button" id="unpackNext">Continue</button>
+      <button class="link-btn center" type="button" data-go="safety">Does this feel unsafe? Get support</button>
+      <button class="link-btn center small" type="button" id="useExample">Try it with an example</button>
+    </section>
+
+    <!-- Reflect -->
+    <section class="screen" data-screen="reflect" aria-labelledby="rt">
+      <h1 id="rt">Here&#39;s what I heard</h1>
+      <div class="card">
+        <p class="label">What happened</p><p id="rSituation" class="quote"></p>
+        <p class="label">What you want</p><p id="rWant" class="quote"></p>
+        <p class="label">What you are afraid of</p><p id="rFear" class="quote"></p>
+      </div>
+      <p class="muted">Is that right? If not, go back and change it.</p>
+      <h2>Two costs to weigh</h2>
+      <div class="card"><strong>If you say it while you&#39;re angry</strong><p>It can come out as blame. Then the talk turns to your tone, not your need.</p></div>
+      <div class="card"><strong>If you swallow it</strong><p>The resentment stays. Next time will likely look the same.</p></div>
+      <p class="muted">Feeling frustrated is not the problem. You get to choose how you respond.</p>
+      <div class="grow"></div>
+      <button class="btn" type="button" data-go="draft">That&#39;s right, keep going</button>
+      <button class="link-btn center" type="button" data-go="safety">Does this feel unsafe? Get support</button>
+    </section>
+
+    <!-- Draft -->
+    <section class="screen" data-screen="draft" aria-labelledby="dt">
+      <h1 id="dt">Draft your ask</h1>
+      <p class="muted">Write what you would say to them. Don&#39;t polish it yet.</p>
+      <div class="field">
+        <label for="draft1">Your draft</label>
+        <textarea id="draft1" rows="4"></textarea>
+      </div>
+      <button class="btn secondary" type="button" id="checkDraft">Check my draft</button>
+      <div id="flags" class="card" hidden aria-live="polite"></div>
+      <div class="field" id="reviseField" hidden>
+        <label for="draft2">Try it again, in your words</label>
+        <textarea id="draft2" rows="3" placeholder="Say what you need in one or two sentences."></textarea>
+        <button class="link-btn" type="button" id="checkRevised">Check this version</button>
+        <div id="flags2" class="card" hidden aria-live="polite"></div>
+      </div>
+      <p class="error" id="draftError" role="alert" hidden>Write a draft first.</p>
+      <div class="grow"></div>
+      <button class="btn" type="button" id="draftNext">Next: pushback</button>
+    </section>
+
+    <!-- Pushback -->
+    <section class="screen" data-screen="pushback" aria-labelledby="pt">
+      <h1 id="pt">What might they say?</h1>
+      <p class="muted">Pick the ones that sound like them, or add your own. You don&#39;t have to win. You only need to say your piece again, calmly.</p>
+      <fieldset class="picks" id="picks"><legend class="sr-only">Likely pushback</legend></fieldset>
+      <div class="field add-own">
+        <label for="ownPush">Add your own</label>
+        <div class="row"><input id="ownPush" type="text" placeholder="Something they often say"><button class="btn small" type="button" id="addPush">Add</button></div>
+      </div>
+      <div id="replies"></div>
+      <div class="grow"></div>
+      <button class="btn" type="button" data-go="plan">See my plan</button>
+    </section>
+
+    <!-- Plan -->
+    <section class="screen" data-screen="plan" aria-labelledby="plt">
+      <h1 id="plt">Your plan</h1>
+      <div class="card"><p class="label">Your ask</p><p id="pAsk" class="quote"></p></div>
+      <div class="card" id="pRepliesCard"><p class="label">If they push back</p><div id="pReplies"></div></div>
+      <div class="card soft"><p>It may feel uncomfortable when you say it. That does not mean you did something wrong.</p></div>
+      <p class="muted small">Your plan is not saved. Copy it or download it before you close the page.</p>
+      <div class="grow"></div>
+      <button class="btn" type="button" id="copyPlan">Copy my plan</button>
+      <button class="btn secondary" type="button" id="downloadPlan">Download as a text file</button>
+      <button class="link-btn center" type="button" id="startOver">Start a new situation</button>
+      <p class="status" id="copyStatus" role="status"></p>
+    </section>
+
+    <!-- Safety -->
+    <section class="screen" data-screen="safety" aria-labelledby="st">
+      <h1 id="st">Let&#39;s pause here</h1>
+      <p id="safetyLead">If something about this involves your safety, that is not something to practice a script for. Talking with someone trained can help.</p>
+      <div class="card"><strong>If you are in immediate danger</strong><p><a href="tel:911">Call 911</a>.</p></div>
+      <div class="card"><strong>National Domestic Violence Hotline</strong><p><a href="tel:18007997233">Call 1-800-799-7233</a>, or text START to <a href="sms:88788?&amp;body=START">88788</a>.</p></div>
+      <div class="card"><strong>988 Suicide &amp; Crisis Lifeline</strong><p><a href="tel:988">Call</a> or <a href="sms:988">text</a> 988.</p></div>
+      <p class="muted small">These are free and confidential, and available any time. Advoq8 is not a crisis service.</p>
+      <div class="grow"></div>
+      <button class="btn secondary" type="button" id="keepGoing">Keep going, with support in view</button>
+    </section>
+
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
