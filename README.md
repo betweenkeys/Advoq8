@@ -33,7 +33,19 @@ python3 -m http.server
 
 ## Put it online with GitHub Pages
 
-In the repo on GitHub: **Settings > Pages > Build and deployment**. Set Source to **Deploy from a branch**, pick **main** and **/ (root)**, and save. After a minute or two the app is live at `https://betweenkeys.github.io/Advoq8/`.
+In the repo on GitHub: **Settings > Pages > Build and deployment**. Set Source to **Deploy from a branch**, pick **main** and **/ (root)**, and save. Then, under **Custom domain**, enter `advoq8.betweenkeys.org`, save, and turn on **Enforce HTTPS** once it is offered.
+
+The app lives at **https://advoq8.betweenkeys.org**. The `CNAME` file in this repo tells GitHub Pages to use that address.
+
+### DNS setting for betweenkeys.org
+
+At the company that manages DNS for betweenkeys.org, add one record:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| CNAME | advoq8 | betweenkeys.github.io |
+
+DNS changes can take from a few minutes to a few hours to work.
 
 ## Files
 
