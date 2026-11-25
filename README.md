@@ -31,21 +31,11 @@ No build step. Open `index.html` in a browser, or serve the folder:
 python3 -m http.server
 ```
 
-## Put it online with GitHub Pages
+## Hosting
 
-In the repo on GitHub: **Settings > Pages > Build and deployment**. Set Source to **Deploy from a branch**, pick **main** and **/ (root)**, and save. Then, under **Custom domain**, enter `advoq8.betweenkeys.org`, save, and turn on **Enforce HTTPS** once it is offered.
+The app is hosted free on Cloudflare Pages at **https://advoq8.betweenkeys.org**, deployed from this repo. Every push to `main` deploys automatically. The repo can stay private.
 
-The app lives at **https://advoq8.betweenkeys.org**. The `CNAME` file in this repo tells GitHub Pages to use that address.
-
-### DNS setting for betweenkeys.org
-
-At the company that manages DNS for betweenkeys.org, add one record:
-
-| Type | Name | Value |
-| --- | --- | --- |
-| CNAME | advoq8 | betweenkeys.github.io |
-
-DNS changes can take from a few minutes to a few hours to work.
+Cloudflare settings: no framework preset, build command left empty, build output directory `/`.
 
 ## Files
 
